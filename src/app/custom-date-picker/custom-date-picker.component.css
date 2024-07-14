@@ -1,0 +1,155 @@
+  .date-picker {
+  width: 310px;;
+    background-color: #fff;
+    padding: 16px 10px;
+    font-family: 'Roboto', sans-serif;
+    border-top: 2px solid #FFFF;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .header button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .days-name {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 10px;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+  }
+  
+  .day {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.3s;
+  }
+  
+  .day.empty {
+    cursor: default;
+  }
+  
+  .day:hover:not(.empty),
+  .day.hovered {
+    background: #1DA1F2;
+  }
+  
+  .day.selected {
+    background:#1DA1F2;
+    color: white;
+  }
+  
+  .monthAndYear{
+
+font-family: Roboto;
+font-size: 18px;
+font-weight: 500;
+line-height: 21.09px;
+text-align: left;
+
+  }
+
+  .outerCircle{
+    background: white;
+    color: black;
+    border: 1px solid #1DA1F2;
+  }
+
+  /* overlay */
+  .overlayDatePicker {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    background: #0000006b;
+    inset: 0;
+    justify-content: center;
+    align-items: center;
+    z-index: 5;
+  }
+  .daysName {
+    display: grid;
+    background: white;
+    width: 330px;
+    grid-template-columns: auto auto;
+    box-sizing: border-box;
+    padding: 13px;
+    gap: 18px;
+    z-index: 6;
+    cursor: pointer;
+    border-radius: 16px 16px 0 0;
+  }
+  .daysName span{
+      background: #EDF8FF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      padding: 6px;
+      border-radius: 6px;
+      color: #1DA1F2;
+  }
+  
+  .daysName span:hover{
+    background: #1DA1F2;
+    color: #fff;
+  }
+  .middlediv{
+    z-index: 6;
+  }
+  .bottomBtns {
+    width: 330px;
+    background: white;
+    display: flex;
+    box-sizing: border-box;
+    padding: 20px;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 6;
+    border-radius: 0 0 16px 16px ;
+  }
+  .dateLabel{
+    display: flex;
+    gap: 9px;
+    align-items: center;
+  }
+  .btnsCancel {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    gap: 9px;
+  }
+  .btnsCancel button:nth-child(2){
+    padding: 11px 18px;
+      border: none;
+      background: #1DA1F2;
+      color: white;
+      border-radius: 5px;
+  }
+  .btnsCancel button:nth-child(1){
+    padding: 11px 18px;
+    border: none;
+    background: #EDF8FF;
+    color: #1DA1F2;
+    border-radius: 5px;
+  
+  }
