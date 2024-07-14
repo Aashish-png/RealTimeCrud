@@ -1,42 +1,10 @@
-<!-- <div class="date-picker">
-    <div class="header">
-      <button (click)="previousMonth()">
-        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8.8733 13.3589L13.395 18.4065C13.9458 19.0212 14.5759 19.1584 15.2855 18.818C15.9962 18.479 16.3516 17.8726 16.3516 16.999L16.3516 7.00101C16.3516 6.1274 15.9962 5.52104 15.2855 5.18195C14.5759 4.84157 13.9458 4.97876 13.395 5.59352L8.8733 10.6411C8.69939 10.8352 8.56896 11.0455 8.482 11.272C8.39504 11.4985 8.35156 11.7412 8.35156 12C8.35156 12.2588 8.39504 12.5015 8.482 12.728C8.56896 12.9545 8.69939 13.1648 8.8733 13.3589Z" fill="#949C9E"/>
-            </svg>
-            
-      </button>
-      <span class="monthAndYear">{{ monthNames[currentMonth] }} {{ currentYear }}</span>
-      <button (click)="nextMonth()">
-        <svg width="9" height="14" viewBox="0 0 9 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8.1267 8.35895L3.60496 13.4065C3.05423 14.0212 2.42409 14.1584 1.71452 13.818C1.0038 13.479 0.648437 12.8726 0.648437 11.999L0.648437 2.00101C0.648437 1.1274 1.0038 0.521045 1.71452 0.181954C2.42409 -0.158431 3.05423 -0.0212413 3.60496 0.593521L8.1267 5.64105C8.30061 5.83519 8.43104 6.0455 8.518 6.27199C8.60496 6.49848 8.64844 6.74115 8.64844 7C8.64844 7.25885 8.60496 7.50152 8.518 7.72801C8.43104 7.9545 8.30061 8.16481 8.1267 8.35895Z" fill="#949C9E"/>
-            </svg>
-            
-      </button>
-    </div>
-    <div class="days-name">
-      <span *ngFor="let dayName of dayNames">{{ dayName }}</span>
-    </div>
-    <div class="days">
-      <div *ngFor="let day of days" 
-           (click)="day && selectDate(day)" 
-           [class.selected]="lastSelectedDate?.getDate() === day && lastSelectedDate?.getMonth() === currentMonth && lastSelectedDate?.getFullYear() === currentYear"
-           class="day" 
-           [class.empty]="!day">
-        {{ day }}
-      </div>
-    </div>
-  </div>
-   -->
-
-
   <div class="overlayDatePicker"  >
     <div class="daysName">
-      <span (click)="selectFromBox('Today')" >Today </span>
-      <span (click)="selectFromBox('Next Monday')">Next Monday </span>
-      <span (click)="selectFromBox('Next Tuesday')">Next Tuesday </span>
-      <span (click)="selectFromBox('After 1 week')">After 1 week </span>
-      <span *ngIf="noDate"  (click)="selectFromBox('No date')">No date </span>
+      <span  [class.blueBox]="selectedBox=='Today'" (click)="selectFromBox('Today')" >Today </span>
+      <span  [class.blueBox]="selectedBox=='Next Monday'"   (click)="selectFromBox('Next Monday')">Next Monday </span>
+      <span  [class.blueBox]="selectedBox=='Next Tuesday'" (click)="selectFromBox('Next Tuesday')">Next Tuesday </span>
+      <span  [class.blueBox]="selectedBox=='After 1 week'" (click)="selectFromBox('After 1 week')">After 1 week </span>
+      <span *ngIf="_noDate"  [class.blueBox]="selectedBox=='No date'" (click)="selectFromBox('No date')">No date </span>
     </div>
       <div class="middlediv">
 

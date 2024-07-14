@@ -1,6 +1,7 @@
 import {
   Component,
   ElementRef,
+  HostListener,
   OnDestroy,
   OnInit,
   QueryList,
@@ -9,6 +10,7 @@ import {
 import { EmployeeService } from '../employee.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EmployeeFormComponent } from '../employee-form/employee-form.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-employee-list',
   templateUrl: './employee-list.component.html',
@@ -34,28 +36,38 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
   notifications=false;
   intervalId:any;
   editvisible=false
+  desktopTab=false
+  transformMap=new Map()
 
   constructor(
     public employeeService: EmployeeService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private  snackBar:MatSnackBar
   ) {
     this.employeeService.loadEmployees();
-    setTimeout(() => {
-      console.log('=========>', this.employeeService.employees);
-      if (employeeService.employees) {
-        this.dataExist = true;
-        this.allData = employeeService.employees;
-
-        this.filteringData();
-      }
-    }, 2000);
-
+    if (window.innerWidth > 1000) {
+      this.desktopTab=true
+    } else {
+      this.desktopTab=false
+    }
+  }
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    if (window.innerWidth > 1000) {
+      this.desktopTab=true
+    } else {
+      this.desktopTab=false
+    }
   }
 
 
   ngOnInit(): void {
     this.subscription = this.employeeService.employeeDetails$.subscribe((rendered) => {
       this.allData = rendered;
+      console.log("renderred ", this.allData)
+      if(this.allData.length){
+        this.dataExist=true
+      }
       this.filteringData();
       console.log("called ")
     });
@@ -67,10 +79,12 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
     }
     if(this.intervalId){
       clearInterval(this.intervalId)
+      this.intervalId=null
     }
   }
 
   filteringData() {
+    if(!this.allData.length)return
     this.currentEmployee = this.allData.filter(
       (obj: any) => !obj.endingDate || obj.endingDate == 'noDate'
     );
@@ -87,27 +101,45 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
       maxHeight: '100vh',
       data: { employee: null },
       panelClass: 'custom-dialog-panel',
-      backdropClass: 'custom-dialog-backdrop',
     });
   }
 
   onEdit(employee: any) {
-    this.dialog.open(EmployeeFormComponent, {
+    const dialogRef = this.dialog.open(EmployeeFormComponent, {
       width: '100%',
       maxHeight: '100vh',
       panelClass: 'custom-dialog-panel',
-      backdropClass: 'custom-dialog-backdrop',
       data: { employee },
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+            const id=result.id 
+            const arr=result.endingDate?this.previewsEMployee:this.currentEmployee 
+            this.onDelete(id, false, arr)
+      } 
+    });
+  
   }
 
   onDelete(id: number|null=null , clearinterval:boolean=false  , arr:any=null) {
     if(clearinterval){     ///when i need to undo the operations 
       if(this.intervalId)clearInterval(this.intervalId)
+        this.intervalId=null
         this.notifications=false;
         this.filteringData()
         return
     }
+
+    if(id && this.intervalId){
+
+      let message='Please wait before deleting again.'
+      this.snackBar.open(message, '', {
+        duration: 2000,
+      });
+      return
+    }
+
     this.notifications=true
 
     if(id)this.findAndDeleteById(arr, id)
@@ -116,6 +148,7 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
       this.notifications=false
        if(id)this.employeeService.deleteEmployee(id);
       if(this.intervalId) clearInterval(this.intervalId)
+        this.intervalId=null
      },3000)
 
 
@@ -137,7 +170,7 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
   }
 
   onTouchMove(event: TouchEvent, id: any, pre: any = false){
-    console.log('Evenet  move  ', event, this.initialX);
+    if(this.desktopTab) return
     if (this.initialX === null) {
       return;
     }
@@ -149,24 +182,33 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
     
     if (diffX > 0) {// Sliding to the  left
 
-      if(this.transformStyle=='translateX(89px)'){
+      let transformStyle=this.transformMap.get(id)  //for the first time undefine then it will be false 
+
+      if(transformStyle=='translateX(89px)'){
         this.editvisible=true
         this.transformStyle = `translateX(0)`;
+
+        this.transformMap.set(id, this.transformStyle)
          back=true
 
       }else{
         this.editvisible=false
         this.transformStyle='translateX(-89px)';
+        this.transformMap.set(id, this.transformStyle)
       }
       
     }else  if (diffX < 0) {   ///sliding back to normal 
-
-      if(this.transformStyle=='translateX(-89px)'){
+      let transformStyle=this.transformMap.get(id) 
+      if(transformStyle=='translateX(-89px)'){
         this.transformStyle = `translateX(0)`;
+
+        this.transformMap.set(id, this.transformStyle)
         back=true
       } else{
         this.editvisible=true
         this.transformStyle='translateX(89px)'
+        this.transformMap.set(id, this.transformStyle)
+        
       }
     
     }
@@ -368,82 +410,6 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
   
     this.initialX = null;
   }
-
-
-
-  onTouchMove2(event: TouchEvent, id: any, pre: any = false){
-    console.log('Evenet  move  ', event, this.initialX);
-    if (this.initialX === null) {
-      return;
-    }
-
-    let back=false
-
-    const currentX = event.touches[0].clientX;
-    const diffX = currentX-this.initialX 
-
-    
-    if (diffX > 0) {// Sliding to the  left
-      this.transformStyle = `translateX(-89px)`;
-    }
-    if (diffX < 0) {   ///sliding back to normal 
-      this.transformStyle = `translateX(0)`;
-      back=true
-    }
-
-    if (pre) {//for old emplyesss 
-      let index = id.split('_');
-      index = index[0];
-      console.log('index of prev ', index);
-      this.cardPrev.forEach((cardPrev, idx) => {
-        if (idx == index) {
-          cardPrev.nativeElement.style.transform = this.transformStyle;
-        }
-      });
-
-      this.deletecardPrev.forEach((card, idx) => {
-        if (idx == index) {
-          card.nativeElement.style.zIndex = '22';
-        }
-      });
-
-      if(back){
-        back=false
-        this.deletecardPrev.forEach((card, idx) => {
-          if (idx == index) {
-            card.nativeElement.style.zIndex = '-1';
-          }
-        });
-      }
-
-
-    } else {  //for current employess 
-      const index = id;
-      this.cards.forEach((card, idx) => {
-        if (idx === index) {
-          card.nativeElement.style.transform = this.transformStyle;
-        }
-      });
-
-      this.deletecard.forEach((card, idx) => {
-        if (idx === index) {
-          card.nativeElement.style.zIndex = '22';
-        }
-      });
-
-      if(back){
-        back=false
-        this.deletecard.forEach((card, idx) => {
-          if (idx === index) {
-            card.nativeElement.style.zIndex = '-1';
-          }
-        });
-      }
-    }
-    this.initialX = null;
-  }
-
-
 
   
 }

@@ -17,6 +17,7 @@
     font-size: 39px;
     z-index: 1;
     border: none;
+    cursor: pointer;
 }
 .allEmployeDiv {
 
@@ -49,7 +50,7 @@
     color: #1DA1F2;
     position: sticky;
     top: 0;
-    z-index: 6;
+    z-index: 23;
 }
 
 span.employinfobar {
@@ -58,9 +59,8 @@ span.employinfobar {
     background: #fff;
     box-sizing: border-box;
     border-bottom: 1px solid rgb(122 122 122 / 9%);
-    padding: 8px 18px;
+    padding: 8px 17px;
     gap: 3px;
-    cursor: grab;
     transition: transform 0.3s ease-in-out;
 }
 
@@ -149,7 +149,7 @@ span.employinfobar {
 
 .swipe {
     position: fixed;
-    bottom: 20px;
+    bottom: 10px;
     font-family: Roboto;
     font-size: 15px;
     font-weight: 400;
@@ -176,4 +176,56 @@ span.employinfobar {
     color: white;
     font-size: 22px;
     z-index: -1;
+}
+.deskTopEdit{
+    position: absolute;
+    right: 79px !important;
+    z-index: 22;
+    top: 0;
+    left: auto;
+    width: 78px;
+    cursor: pointer;
+}
+.desktopDelete{
+    z-index: 22;
+    cursor: pointer;
+}
+
+.desktopEmp{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-around;
+}
+.empDetailsDesktop{
+    width: 47%;
+    height: 81vh;
+    background: #fff;
+    box-sizing: border-box;
+    padding: 0 0px;
+    border: 2px solid #1DA1F2;
+    box-sizing: border-box;
+    padding: 0px 24px;
+    border-radius: 14px;
+    margin: 13px;
+    filter: drop-shadow(2px 4px 6px #1DA1F2);
+}
+.deletedMSg{
+    width: 29%;
+    margin: auto;
+    inset: 0;
+    top: 88vh;
+    bottom: 0;
+    padding: 24px;
+    font-size: 20px;
+    border-radius: 7px;
+    filter: drop-shadow(2px 4px 6px black);
+}
+.noDatafound{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 35vh;
+    height: 35dvh;
+    font-size: 20px;
 }

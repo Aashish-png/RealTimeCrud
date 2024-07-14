@@ -1,31 +1,10 @@
 <div >
-    <button  (click)="onAdd()"  matTooltip="Add Employee details " class="addEmployee">
-    
-        +
-    </button>
-    <!-- <table mat-table [dataSource]="employeeService.employees">
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef>ID</th>
-        <td mat-cell *matCellDef="let element">{{ element.id }}</td>
-      </ng-container>
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let element">{{ element.name }}</td>
-      </ng-container>
-      <ng-container matColumnDef="action">
-        <th mat-header-cell *matHeaderCellDef>Action</th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-button (click)="onEdit(element)">Edit</button>
-          <button mat-button (click)="onDelete(element.id)">Delete</button>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table> -->
-
-    <div class="allEmployeDiv">
-      <div class="EmployeDetails">
+    <div *ngIf="dataExist" class="allEmployeDiv" [class.desktopEmp]="desktopTab">
+      <div class="EmployeDetails" [class.empDetailsDesktop]="desktopTab"  >
+          <!------------------------ Current employees-------------------------------->
           <div class="Label">Current employees</div>
+
+          <div class="noDatafound"  *ngIf="!currentEmployee.length"> No Current employees data  found </div>
           <div    class="parentinfo" *ngFor="let data of currentEmployee  let i = index;;">
             <span #editIcon  class="edit" (click)="onEdit(data)">
                   Edit
@@ -36,14 +15,20 @@
               <span> {{data.role}}</span>
               <span>  From {{data.joiningDate}}</span>
            </span>
-           <span class="delteIcon"   #deletecard  [id]="i+'_Delete'"  (click)="onDelete(data.id , false, currentEmployee)">
+
+           <span [class.deskTopEdit]="desktopTab" class="edit" *ngIf="desktopTab" (click)="onEdit(data)">
+            Edit
+           </span>
+           <span class="delteIcon" [class.desktopDelete]="desktopTab"   #deletecard  [id]="i+'_Delete'"  (click)="onDelete(data.id , false, currentEmployee)">
             <img [src]="deleteIcon" alt="delete">
            </span>
           </div>
       </div>
       <!------------------------ previous employees-------------------------------->
-      <div class="EmployeDetails">
+      <div class="EmployeDetails" [class.empDetailsDesktop]="desktopTab" >
         <div class="Label">Previous employees</div>
+
+        <div class="noDatafound" *ngIf="!previewsEMployee.length"> No previous employees data  found </div>
         <div    class="parentinfo" *ngFor="let data of previewsEMployee  let i = index;">
           <span #editIconPrev  class="edit" (click)="onEdit(data)">
             Edit
@@ -56,7 +41,10 @@
             <span> {{data.role}}</span>
             <span>  From {{data.joiningDate}} - {{data.endingDate}}</span>
          </span>
-         <span  #deletecardPrev  class="delteIcon" (click)="onDelete(data.id ,false, previewsEMployee )">
+         <span [class.deskTopEdit]="desktopTab" class="edit" *ngIf="desktopTab" (click)="onEdit(data)">
+          Edit
+         </span>
+         <span  [class.desktopDelete]="desktopTab"   #deletecardPrev  class="delteIcon" (click)="onDelete(data.id ,false, previewsEMployee )">
           <img [src]="deleteIcon" alt="delete">
          </span>
         </div>
@@ -206,12 +194,13 @@
       </div>
   </div>
 
-<div class="notification"   [class.notificationOpen]="notifications">
 
-Employee data has been deleted   <button  (click)="onDelete(-1, true )"  class="undoBtn">Undo</button>
-
+  <!-- fixed elemnets  -->
+<button  (click)="onAdd()"  matTooltip="Add Employee details " class="addEmployee"> +</button>
+<div class="notification"   [class.notificationOpen]="notifications"  [class.deletedMSg]="desktopTab">
+ Employee data has been deleted   <button  (click)="onDelete(-1, true )"  class="undoBtn">Undo</button>
 </div>
-<div class="swipe" >
+<div class="swipe"  *ngIf="!desktopTab && dataExist">
   <span>Swipe left to delete</span>
   <span>Swipe right to edit</span>
 </div>

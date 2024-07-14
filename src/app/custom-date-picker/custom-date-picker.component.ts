@@ -10,7 +10,7 @@ import { EmployeeService } from '../employee.service';
 export class CustomDatePickerComponent {
   @Output() dateSelected = new EventEmitter<Date>();
   @Output() datePickerClose = new EventEmitter<boolean>();
-  @Input() noDate: boolean = false;
+  _noDate=false
   currentMonth: number;
   currentYear: number;
   days: any[];
@@ -23,6 +23,8 @@ export class CustomDatePickerComponent {
   ];
   dayNames: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+  selectedBox=''
+
   constructor(public employeeService:EmployeeService) {
     const today = new Date();
     this.currentMonth = today.getMonth();
@@ -32,8 +34,20 @@ export class CustomDatePickerComponent {
     this.currentMonthYear.push(this.monthNames[this.currentMonth])
     this.currentMonthYear.push(this.currentYear)
     this.userSelectedcurrentMonthYear=this.monthNames[this.currentMonth]+" "+ this.currentYear
+
+    
   }
 
+
+  @Input()
+  set noDate(value: boolean) {
+    this._noDate = value;
+    if(this._noDate){
+      this.selectedBox='No date'
+    }else{
+       this.selectedBox='Today'
+    }
+  }
   getTodayDate(): number {
     const today = new Date();
     return today.getDate();
@@ -42,14 +56,14 @@ export class CustomDatePickerComponent {
     const date = new Date(year, month, 1);
     const days = [];
 
-    // Fill the days array with the correct number of blank days
+    // Filling  the days array with the correct number of blank days
     // for the days before the start of the month
     const firstDayIndex = date.getDay();
     for (let i = 0; i < firstDayIndex; i++) {
       days.push(null);
     }
 
-    // Fill the days array with the correct number of days for the month
+    // Filling  the days array with the correct number of days for the month
     while (date.getMonth() === month) {
       days.push(date.getDate());
       date.setDate(date.getDate() + 1);
@@ -67,10 +81,8 @@ export class CustomDatePickerComponent {
   }
   closeDatePicker(save:boolean =false){
     if(save){  
-      if(this.noDate){
 
-      }
-
+      console.log("joinning date", )
       this.dateSelected.emit(this.lastSelectedDate);
     }else{
       this.datePickerClose.emit(false);
@@ -116,21 +128,18 @@ export class CustomDatePickerComponent {
         }
       }
     }
-
+    this.selectedBox=key
     if(key=='Today'){
      console.log("==>",this.currentMonthYear)
       
       this.selectDate(this.getTodayDate())
     }
     if(key=='Next Monday'){
-      console.log("===> Monday", this.getNextMonday())
       const day=this.getNextMonday()
       this.selectDate(day)
 
     } 
     if(key=='Next Tuesday'){
-      console.log("===> tuesy", this.getNextTuesday())
-
       const day=this.getNextTuesday()
       this.selectDate(day)
     }
@@ -140,14 +149,11 @@ export class CustomDatePickerComponent {
     }
     
     if(key=='No date'){
-
+        
     }
 
 
   }
-
-
-
 
  getNextMonday(): number {
   const today = new Date();

@@ -17,7 +17,7 @@ import {  MatDatepickerModule } from '@angular/material/datepicker';
 import {  MatNativeDateModule } from '@angular/material/core';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { CustomDatePickerComponent } from './custom-date-picker/custom-date-picker.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const dbConfig: DBConfig = {
   name: 'EmployeeDB',
@@ -50,6 +50,7 @@ const dbConfig: DBConfig = {
     MatDatepickerModule,
     MatNativeDateModule,
     MatTooltipModule,
+    MatSnackBarModule,
   ],
   
   providers: [EmployeeService, IndexedDbService],

@@ -3,8 +3,6 @@
   position: fixed !important;
   inset: 0;
 }
-
-/* ===== */
 .mainEmplpyeeForm {
   display: flex;
   flex-direction: column;
@@ -22,9 +20,8 @@ header.formHeader {
   width: 96%;
   background: #1DA1F2;
   padding: 0 4%;
-  border-radius: 4px;
   color: #FFF;
-  height: 60px;
+  height: 74px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -46,7 +43,6 @@ header.formHeader {
   padding: 5px 4%;
 }
 
-/* ---------- */
 .name {
   display: flex;
   align-items: flex-start;
@@ -167,7 +163,6 @@ span.roleSpan {
   color: #fff;
 }
 
-
 .datePicker {
   opacity: 0;
   pointer-events: none;
@@ -182,5 +177,11 @@ span.roleSpan {
 .positionOpacity {
   color: #323238;
   opacity: 1 !important;
-
+}
+span.editEmployeeDetails {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 11px 4% 11px 0;
 }

@@ -1,6 +1,7 @@
 import {  Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EmployeeService } from '../employee.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -16,39 +17,43 @@ export class EmployeeFormComponent  {
   endingDate='NoDate'
   datePickerOpen=false
   joiningDate='Today'
-  noDate=false
+  noDate=false;
+  isEditForm=false
 
   constructor(
     private dialogRef: MatDialogRef<EmployeeFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private employeeService: EmployeeService,
+    private snackBar:MatSnackBar
   ) {
     this.employee = data.employee ? { ...data.employee } :null;
-
-    console.log("=====> checing", this.employee)
     if(this.employee){
+      this.isEditForm=true
         this.joiningDate= this.employee.joiningDate
         this.positionOfEmp=this.employee.role
         if(this.employee.endingDate){
           this.endingDate=this.employee.endingDate
         }
     }else{
-      this.employee={joiningDate: new Date()}
-
-
+         this.employee={joiningDate: new Date()}
     }
 
   }
 
   onSave() {
-
-  //  if(this.employee && !this.employee.endingDate){
-  //   this.employee.endingDate='noDate'
-  //  } 
-
+  if(this.employee &&  !this.employee.name || !this.employee.role ){
+    let message='Please fill in all the fields.'
+    this.snackBar.open(message, '', {
+      duration: 2000,
+    });
+    return    // early returning if there is filed missing 
+  }
+  
     console.log("employee details ", this.employee  , this.joiningDate)
     if(this.joiningDate=='Today'){
       this.employee['joiningDate']= this.employeeService.formatDate(this.employee.joiningDate)
+    }else{
+      this.employee['joiningDate']=this.joiningDate
     }
     if (this.employee.id) {
       this.employeeService.updateEmployee(this.employee);
@@ -59,6 +64,10 @@ export class EmployeeFormComponent  {
   }
   onCancel(){
     this.dialogRef.close();
+  }
+
+  DeleteEditDataFromHeader(){
+    this.dialogRef.close( {...this.data.employee});
   }
 
 
@@ -86,22 +95,28 @@ export class EmployeeFormComponent  {
    
   }
 
-  closeDatePicker(event:any){
+  closeDatePicker(event:any){  /// this is on cancel 
     if(!event){
       this.datePickerOpen=false
     }
-
-    
   }
 
   onDateSelected(date: Date): void {
-    // this.selectedDate = date;
-    console.log("date ==>", date)
     if(this.noDate ){
-
-    this.endingDate=this.employeeService.formatDate(date)
+      const formatedDate= this.employeeService.formatDate(date)
+      if(this.joiningDate=='Today'){
+        this.joiningDate=  this.employeeService.formatDate(new Date())
+      }
+     let less=   this.compareDates(this.joiningDate, formatedDate)  // joinning date can not be greater then ending date 
+     if(!less){
+      let message='! SORRY,  the joining date cannot be later than the ending date. Please check your dates and try again.'
+      this.snackBar.open(message, '', {
+        duration: 5000,
+      });
+      return
+     }
+    this.endingDate=formatedDate
     this.employee['endingDate']=this.endingDate
-
     }else{
       this.joiningDate= this.employeeService.formatDate(date)
       this.employee['joiningDate']=this.joiningDate
@@ -109,4 +124,15 @@ export class EmployeeFormComponent  {
   
     this.datePickerOpen=false;
   }  
+  compareDates(joining:any, ending:any) {
+    const dateObj1 = new Date(joining);
+    const dateObj2 = new Date(ending);
+    if (dateObj1 > dateObj2) {
+      return   false
+    } else if (dateObj1 < dateObj2) {
+      return true
+    } else {
+      return false
+    }
+  }
 }
