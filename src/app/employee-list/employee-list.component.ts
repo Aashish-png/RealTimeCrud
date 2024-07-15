@@ -180,9 +180,6 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
     const currentX = event.touches[0].clientX;
     
     const diffX = this.initialX - currentX;
-    console.log("current x ==>", currentX , diffX  , this.initialX)
-
-    
 
     if ( Math.abs( diffX) < threshold) return
     if (diffX > 0) {// Sliding to the  left
@@ -208,7 +205,8 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
         this.transformStyle = `translateX(0)`;
 
         this.transformMap.set(id, this.transformStyle)
-        back=true
+        back=true;
+        this.editvisible=false
       } else{
         this.editvisible=true
         this.transformStyle='translateX(89px)'
@@ -218,7 +216,7 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
     
     }
 
-
+console.log("transof arrr", this.transformMap)
     if(this.editvisible){// this is edit section 
      
       if (pre) {//for old emplyesss in edit section 

@@ -109,7 +109,7 @@ export class EmployeeFormComponent  {
       }
      let less=   this.compareDates(this.joiningDate, formatedDate)  // joinning date can not be greater then ending date 
      if(!less){
-      let message='! SORRY,  the joining date cannot be later than the ending date. Please check your dates and try again.'
+      let message=' SORRY! the joining date cannot be later than the ending date. Please check your dates and try again.'
       this.snackBar.open(message, '', {
         duration: 5000,
       });
