@@ -174,12 +174,17 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
     if (this.initialX === null) {
       return;
     }
-
+    const threshold = 60; 
     let back=false
 
     const currentX = event.touches[0].clientX;
-    const diffX = this.initialX - currentX;
     
+    const diffX = this.initialX - currentX;
+    console.log("current x ==>", currentX , diffX  , this.initialX)
+
+    
+
+    if ( Math.abs( diffX) < threshold) return
     if (diffX > 0) {// Sliding to the  left
 
       let transformStyle=this.transformMap.get(id)  //for the first time undefine then it will be false 
