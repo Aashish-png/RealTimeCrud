@@ -48,8 +48,6 @@ export class EmployeeFormComponent  {
     });
     return    // early returning if there is filed missing 
   }
-  
-    console.log("employee details ", this.employee  , this.joiningDate)
     if(this.joiningDate=='Today'){
       this.employee['joiningDate']= this.employeeService.formatDate(this.employee.joiningDate)
     }else{
@@ -121,7 +119,7 @@ export class EmployeeFormComponent  {
       this.joiningDate= this.employeeService.formatDate(date)
       this.employee['joiningDate']=this.joiningDate
     }
-  
+
     this.datePickerOpen=false;
   }  
   compareDates(joining:any, ending:any) {

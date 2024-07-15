@@ -1,5 +1,7 @@
 import {
   Component,
+  computed,
+  effect,
   ElementRef,
   HostListener,
   OnDestroy,
@@ -29,6 +31,7 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
   currentEmployee: any = [];
   previewsEMployee: any = [];
   allData: any = [];
+  allDataSignal:any=computed(()=>this.employeeService._employees())
   initialX: any;
   transformStyle: string = '';
   deleteIcon ='https://firebasestorage.googleapis.com/v0/b/engage-edge.appspot.com/o/Vector.png?alt=media&token=13b38083-4c58-4657-af1a-60251ccf8991';
@@ -50,6 +53,16 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
     } else {
       this.desktopTab=false
     }
+
+    effect(()=>{
+       this.allData= this.allDataSignal()
+      if(this.allData.length){
+        this.dataExist=true
+      }else{
+        this.dataExist=false
+      }
+      this.filteringData();
+    })
   }
   @HostListener('window:resize', ['$event'])
   onWindowResize() {
@@ -62,15 +75,15 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
 
 
   ngOnInit(): void {
-    this.subscription = this.employeeService.employeeDetails$.subscribe((rendered) => {
-      this.allData = rendered;
-      console.log("renderred ", this.allData)
-      if(this.allData.length){
-        this.dataExist=true
-      }
-      this.filteringData();
-      console.log("called ")
-    });
+    // this.subscription = this.employeeService.employeeDetails$.subscribe((rendered) => {
+    //   this.allData = rendered;
+    //   console.log("renderred ", this.allData)
+    //   if(this.allData.length){
+    //     this.dataExist=true
+    //   }
+    //   this.filteringData();
+    //   console.log("called ")
+    // });
   }
 
   ngOnDestroy(): void {
@@ -88,9 +101,7 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
     this.currentEmployee = this.allData.filter(
       (obj: any) => !obj.endingDate || obj.endingDate == 'noDate'
     );
-    console.log('this current employee', this.currentEmployee);
     this.previewsEMployee = this.allData.filter((obj: any) => obj.endingDate);
-    console.log('this previews  employee', this.previewsEMployee);
   }
 
   onAdd() {
@@ -215,25 +226,16 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
       }
     
     }
-
-console.log("transof arrr", this.transformMap)
     if(this.editvisible){// this is edit section 
      
       if (pre) {//for old emplyesss in edit section 
         let index = id.split('_');
         index = index[0];
-        console.log('index of prev ', index);
         this.cardPrev.forEach((cardPrev, idx) => {
           if (idx == index) {
             cardPrev.nativeElement.style.transform = this.transformStyle;
           }
         });
-  
-        // this.deletecardPrev.forEach((card, idx) => {
-        //   if (idx == index) {
-        //     card.nativeElement.style.zIndex = '22';
-        //   }
-        // });
         if(this.editvisible){ ///when  slide right for edit 
           this.editIconPrev.forEach((card, idx) => {
             if (idx == index) {
@@ -271,13 +273,7 @@ console.log("transof arrr", this.transformMap)
             card.nativeElement.style.transform = this.transformStyle;
           }
         });
-        
-        // this.deletecard.forEach((card, idx) => {
-        //   if (idx === index) {
-        //     card.nativeElement.style.zIndex = '22';
-        //   }
-        // });
-  
+
         if(this.editvisible){ ///when  slide right for the edit
           // this.editvisible=false;
           this.editIcons.forEach((card, idx) => {
@@ -291,12 +287,6 @@ console.log("transof arrr", this.transformMap)
   
         if(back){
           back=false
-          // this.deletecard.forEach((card, idx) => {
-          //   if (idx === index) {
-          //     card.nativeElement.style.zIndex = '-1';
-          //   }
-          // });
-  
           if(this.editvisible){ ///when  slide right for edit 
             this.editvisible=false
             this.editIcons.forEach((card, idx) => {
@@ -304,18 +294,14 @@ console.log("transof arrr", this.transformMap)
                 card.nativeElement.style.zIndex = '-1';
               }
             });
-    
           }
-  
-  
         }
       }
-//========================================================================================================delete section =====================
+//=============================================delete section =====================
     }else{// this is delete sections 
       if (pre) {//for old emplyesss 
         let index = id.split('_');
         index = index[0];
-        console.log('index of prev ', index);
         this.cardPrev.forEach((cardPrev, idx) => {
           if (idx == index) {
             cardPrev.nativeElement.style.transform = this.transformStyle;
@@ -371,45 +357,17 @@ console.log("transof arrr", this.transformMap)
           }
         });
   
-        // if(this.editvisible){ ///when  slide right for edit 
-        //   this.editIcons.forEach((card, idx) => {
-        //     if (idx == index) {
-        //       card.nativeElement.style.zIndex = '-1';
-        //     }
-        //   });
-  
-        // }
-  
-  
         if(back){
           back=false
           this.deletecard.forEach((card, idx) => {
             if (idx === index) {
               card.nativeElement.style.zIndex = '-1';
             }
-          });
-  
-          // if(this.editvisible){ ///when  slide right for edit 
-          //   this.editvisible=false
-          //   this.editIcons.forEach((card, idx) => {
-          //     if (idx == index) {
-          //       card.nativeElement.style.zIndex = '22';
-          //     }
-          //   });
-    
-          // }
-  
-  
+          });  
         }
       }
 
     }
-
-
-
-
-
-
   
     this.initialX = null;
   }

@@ -7,44 +7,32 @@ import { IndexedDbService } from './indexed-db.service';
 })
 export class EmployeeService {
  _employees:any = signal<any[]>([]);
-//  _employeesComputed = computed(() => this._employees.value);
 
- private employee= new BehaviorSubject<any>(this._employees);
- employeeDetails$ = this.employee.asObservable();
-
-  get employees() {
-    return this._employees.value;
-  }
+//  private employee= new BehaviorSubject<any>(this._employees);
+//  employeeDetails$ = this.employee.asObservable();
+  // get employees() {
+  //   return this._employees.value;
+  // }
 
   constructor(private indexedDbService: IndexedDbService) {
     this.loadEmployees();
   }
 
   loadEmployees() {
-    // this.indexedDbService.getEmployees().subscribe((employees) => {
-    //   this._employees.value = employees;
-    // })
-
     this.indexedDbService.getEmployees().subscribe({
       next: (employees) => {
-        this._employees.value = employees;
-        this.employee.next( this._employees.value);
+        // this._employees.value = employees;
+        this._employees.set(employees)
+        // this.employee.next( this._employees.value);
       },
       error: (err) => {
-        console.error('Error fetching employees:', err);
+        console.log('Error fetching employees:', err);
         this.indexedDbService.clearDatabase()
       }
     });
   }
 
   addEmployee(employee: any) {
-
-  
-      // this.indexedDbService.addEmployee(employee).subscribe(() => {
-
-      //   this.loadEmployees();
-      // });
-
       this.indexedDbService.addEmployee(employee).subscribe({
         next: () => {
           console.log('Employee added successfully');

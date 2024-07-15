@@ -228,8 +228,10 @@ span.employinfobar {
     align-items: center;
     justify-content: center;
     height: 35vh;
-    height: 35dvh;
-    font-size: 20px;
+    height: 21dvh;
+    font-size: 18px;
+    padding: 25px;
+    opacity: 0.7;
 }
 @media screen and (-webkit-min-device-pixel-ratio:0) {
     .addEmployee{

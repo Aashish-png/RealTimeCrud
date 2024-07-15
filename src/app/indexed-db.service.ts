@@ -7,9 +7,6 @@ import { Observable } from 'rxjs';
 })
 export class IndexedDbService {
   constructor(private dbService: NgxIndexedDBService) {
-
-
-  //  this.clearDatabase()
   }
   clearDatabase() {
     this.dbService.deleteDatabase().subscribe({
@@ -18,7 +15,7 @@ export class IndexedDbService {
         window.location.reload(); // Reload the app to reinitialize the database
       },
       error: (error) => {
-        console.error('Error deleting database:', error);
+        console.log('Error deleting database:', error);
       }
     });
   }

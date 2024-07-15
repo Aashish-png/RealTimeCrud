@@ -10,7 +10,7 @@ import { EmployeeService } from '../employee.service';
 export class CustomDatePickerComponent {
   @Output() dateSelected = new EventEmitter<Date>();
   @Output() datePickerClose = new EventEmitter<boolean>();
-  _noDate=false
+  _noDate=false;
   currentMonth: number;
   currentYear: number;
   days: any[];
@@ -22,7 +22,6 @@ export class CustomDatePickerComponent {
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
   dayNames: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
   selectedBox=''
 
   constructor(public employeeService:EmployeeService) {
@@ -34,8 +33,6 @@ export class CustomDatePickerComponent {
     this.currentMonthYear.push(this.monthNames[this.currentMonth])
     this.currentMonthYear.push(this.currentYear)
     this.userSelectedcurrentMonthYear=this.monthNames[this.currentMonth]+" "+ this.currentYear
-
-    
   }
 
 
@@ -73,7 +70,6 @@ export class CustomDatePickerComponent {
   }
 
   selectDate(day: number): void {
-    console.log("log selcte date ", this.lastSelectedDate)
     if (day !== null) {
       this.lastSelectedDate = new Date(this.currentYear, this.currentMonth, day);
       // this.dateSelected.emit(this.lastSelectedDate);
@@ -81,13 +77,10 @@ export class CustomDatePickerComponent {
   }
   closeDatePicker(save:boolean =false){
     if(save){  
-
-      console.log("joinning date", )
       this.dateSelected.emit(this.lastSelectedDate);
     }else{
       this.datePickerClose.emit(false);
     }
-
   }
 
   previousMonth(): void {
@@ -129,15 +122,12 @@ export class CustomDatePickerComponent {
       }
     }
     this.selectedBox=key
-    if(key=='Today'){
-     console.log("==>",this.currentMonthYear)
-      
+    if(key=='Today'){      
       this.selectDate(this.getTodayDate())
     }
     if(key=='Next Monday'){
       const day=this.getNextMonday()
       this.selectDate(day)
-
     } 
     if(key=='Next Tuesday'){
       const day=this.getNextTuesday()
@@ -147,12 +137,8 @@ export class CustomDatePickerComponent {
       const day=this.getDateAfterOneWeek()
       this.selectDate(day)
     }
-    
     if(key=='No date'){
-        
     }
-
-
   }
 
  getNextMonday(): number {
