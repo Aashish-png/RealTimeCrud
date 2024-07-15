@@ -104,14 +104,14 @@ export class EmployeeFormComponent {
       if (this.joiningDate == 'Today') {
         this.joiningDate = this.employeeService.formatDate(new Date())
       }
-      // let less = this.compareDates(this.joiningDate, formatedDate)  // joinning date can not be greater then ending date 
-      // if (!less) {
-      //   let message = ' SORRY! the joining date cannot be later than the ending date. Please check your dates and try again.'
-      //   this.snackBar.open(message, '', {
-      //     duration: 5000,
-      //   });
-      //   return
-      // }
+      let less = this.compareDates(this.joiningDate, formatedDate)  // joinning date can not be greater then ending date 
+      if (!less) {
+        let message = ' SORRY! the joining date cannot be later than the ending date. Please check your dates and try again.'
+        this.snackBar.open(message, '', {
+          duration: 3000,
+        });
+        return
+      }
       this.endingDate = formatedDate
       this.employee['endingDate'] = this.endingDate
     } else {
