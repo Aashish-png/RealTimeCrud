@@ -174,7 +174,7 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
     if (this.initialX === null) {
       return;
     }
-    const threshold = 60; 
+    const threshold = 80; 
     let back=false
 
     const currentX = event.touches[0].clientX;
