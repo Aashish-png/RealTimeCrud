@@ -48,14 +48,14 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
     private  snackBar:MatSnackBar
   ) {
     this.employeeService.loadEmployees();
-    if (window.innerWidth > 1000) {
+    if (window.innerWidth > 1000) {  //for desk top 
       this.desktopTab=true
     } else {
       this.desktopTab=false
     }
 
-    effect(()=>{
-       this.allData= this.allDataSignal()
+    effect(()=>{  
+       this.allData= this.allDataSignal()  
       if(this.allData.length){
         this.dataExist=true
       }else{
@@ -75,22 +75,11 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
 
 
   ngOnInit(): void {
-    // this.subscription = this.employeeService.employeeDetails$.subscribe((rendered) => {
-    //   this.allData = rendered;
-    //   console.log("renderred ", this.allData)
-    //   if(this.allData.length){
-    //     this.dataExist=true
-    //   }
-    //   this.filteringData();
-    //   console.log("called ")
-    // });
+
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-    if(this.intervalId){
+    if(this.intervalId){  ///clearing up c
       clearInterval(this.intervalId)
       this.intervalId=null
     }
@@ -106,8 +95,6 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
 
   onAdd() {
     this.dialog.open(EmployeeFormComponent, {
-      // width: '80%',
-      // maxHeight:'90%',
       width: '100%',
       maxHeight: '100vh',
       data: { employee: null },
@@ -124,7 +111,7 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result) {
+      if (result) {   //if it was closed from header of edit data  delete btn 
             const id=result.id 
             const arr=result.endingDate?this.previewsEMployee:this.currentEmployee 
             this.onDelete(id, false, arr)
@@ -142,8 +129,7 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
         return
     }
 
-    if(id && this.intervalId){
-
+    if(id && this.intervalId){   
       let message='Please wait before deleting again.'
       this.snackBar.open(message, '', {
         duration: 2000,
@@ -155,17 +141,15 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
 
     if(id)this.findAndDeleteById(arr, id)
 
-    this.intervalId= setTimeout(()=>{
+    this.intervalId= setTimeout(()=>{  //deleting from database only after 3 second
       this.notifications=false
        if(id)this.employeeService.deleteEmployee(id);
       if(this.intervalId) clearInterval(this.intervalId)
         this.intervalId=null
      },3000)
-
-
-    
   }
-   findAndDeleteById(arr:any, id:number) {
+
+   findAndDeleteById(arr:any, id:number) {    // for finding  the element and  deleting it 
     const index = arr.findIndex((item:any) => item.id === id);
     if (index !== -1) {
         const deletedItem = arr.splice(index, 1)[0];
@@ -174,7 +158,6 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
     return null; 
 }
 
-  // ====================
 
   onTouchStart(event: TouchEvent, id: any, pre: any = false) {
     this.initialX = event.touches[0].clientX;
@@ -192,10 +175,10 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
     
     const diffX = this.initialX - currentX;
 
-    if ( Math.abs( diffX) < threshold) return
+    if ( Math.abs( diffX) < threshold) return  // is user touches is under 80 threshold  then don't do anything 
     if (diffX > 0) {// Sliding to the  left
 
-      let transformStyle=this.transformMap.get(id)  //for the first time undefine then it will be false 
+      let transformStyle=this.transformMap.get(id)  //getting the value what was the last time was it slide left or right  //for the first time undefine then it will be false 
 
       if(transformStyle=='translateX(89px)'){
         this.editvisible=true
@@ -211,7 +194,7 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
       }
       
     }else  if (diffX < 0) {   ///sliding back to normal 
-      let transformStyle=this.transformMap.get(id) 
+      let transformStyle=this.transformMap.get(id)    //getting the value what was the last time was it slide left or right 
       if(transformStyle=='translateX(-89px)'){
         this.transformStyle = `translateX(0)`;
 
@@ -222,12 +205,10 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
         this.editvisible=true
         this.transformStyle='translateX(89px)'
         this.transformMap.set(id, this.transformStyle)
-        
       }
     
     }
     if(this.editvisible){// this is edit section 
-     
       if (pre) {//for old emplyesss in edit section 
         let index = id.split('_');
         index = index[0];
@@ -236,16 +217,15 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
             cardPrev.nativeElement.style.transform = this.transformStyle;
           }
         });
+
         if(this.editvisible){ ///when  slide right for edit 
           this.editIconPrev.forEach((card, idx) => {
             if (idx == index) {
               card.nativeElement.style.zIndex = '22';
             }
           });
-  
         }
         
-  
         if(back){//when get back from 
           back=false
           this.deletecardPrev.forEach((card, idx) => {
@@ -261,11 +241,9 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
                 card.nativeElement.style.zIndex = '-1';
               }
             });
-    
           }
         }
-  
-  
+
       } else {  //for current employess    in edit section 
         const index = id;
         this.cards.forEach((card, idx) => {
@@ -281,11 +259,9 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
               card.nativeElement.style.zIndex = '22';
             }
           });
-  
         }
-  
-  
-        if(back){
+
+        if(back){  //if sliding back 
           back=false
           if(this.editvisible){ ///when  slide right for edit 
             this.editvisible=false
@@ -327,7 +303,7 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
           back=false
           this.deletecardPrev.forEach((card, idx) => {
             if (idx == index) {
-              card.nativeElement.style.zIndex = '-1';
+              card.nativeElement.style.zIndex = '-1';//showing it to user when they slide 
             }
           });
   
@@ -335,7 +311,7 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
             this.editvisible=false
             this.editIcons.forEach((card, idx) => {
               if (idx == index) {
-                card.nativeElement.style.zIndex = '-1';
+                card.nativeElement.style.zIndex = '-1'; //hiding it form user 
               }
             });
     
@@ -353,7 +329,7 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
         
         this.deletecard.forEach((card, idx) => {
           if (idx === index) {
-            card.nativeElement.style.zIndex = '22';
+            card.nativeElement.style.zIndex = '22';  //showing it to user when they slide 
           }
         });
   
@@ -361,7 +337,7 @@ export class EmployeeListComponent  implements OnInit , OnDestroy{
           back=false
           this.deletecard.forEach((card, idx) => {
             if (idx === index) {
-              card.nativeElement.style.zIndex = '-1';
+              card.nativeElement.style.zIndex = '-1';//hiding it form user 
             }
           });  
         }

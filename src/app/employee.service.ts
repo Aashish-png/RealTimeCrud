@@ -7,13 +7,6 @@ import { IndexedDbService } from './indexed-db.service';
 })
 export class EmployeeService {
  _employees:any = signal<any[]>([]);
-
-//  private employee= new BehaviorSubject<any>(this._employees);
-//  employeeDetails$ = this.employee.asObservable();
-  // get employees() {
-  //   return this._employees.value;
-  // }
-
   constructor(private indexedDbService: IndexedDbService) {
     this.loadEmployees();
   }
@@ -21,9 +14,7 @@ export class EmployeeService {
   loadEmployees() {
     this.indexedDbService.getEmployees().subscribe({
       next: (employees) => {
-        // this._employees.value = employees;
         this._employees.set(employees)
-        // this.employee.next( this._employees.value);
       },
       error: (err) => {
         console.log('Error fetching employees:', err);
@@ -45,9 +36,7 @@ export class EmployeeService {
         complete: () => {
           console.log('Employee addition complete');
         }
-      });
-  
-   
+      }); 
   }
 
   updateEmployee(employee: any) {
@@ -61,7 +50,6 @@ export class EmployeeService {
       this.loadEmployees();
     });
   }
-
 
   formatDate(date: any): string {
     const dateString = date.toDateString();
